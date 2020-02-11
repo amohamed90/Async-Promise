@@ -1,6 +1,6 @@
 $(function() {
 
-  async function getRandomPokemon(num) {
+  async function getRandomPokemon() {
 
     const allPokemon = await $.get("https://pokeapi.co/api/v2/pokemon/?limit=964");
 
@@ -11,7 +11,7 @@ $(function() {
 
     pokemonObj['name'] = pokemon.name;
     pokemonObj['image'] = pokemon.sprites.front_default;
-    pokemonObj["id"] = num
+
     for (let entry of species.flavor_text_entries) {
       if (entry.language.name === 'en') {
         pokemonObj['flavor_text'] = entry.flavor_text;
@@ -22,19 +22,22 @@ $(function() {
     return pokemonObj;
   }
 
+
+  // https://www.youtube.com/watch?v=8aGhZQkoFbQ -> video about function stacks and why the code below
+  // loads asyncronously
   $("button").on("click", function () {
 
     for (let i = 1; i <= 3; i++) {
-      udpateDom(getRandomPokemon, i);
+      udpateDom(getRandomPokemon);
     }
 
   });
 
-  async function udpateDom(asyncFn, i) {
-    let pokemon = await asyncFn(i);
+  async function udpateDom(asyncFn) {
+    let pokemon = await asyncFn();
 
     let $fullContainer = $(`<div><div>${pokemon.name}</div><img src=
-      ${pokemon.image}><div>${pokemon.flavor_text}</div>${i}</div>`);
+      ${pokemon.image}><div>${pokemon.flavor_text}</div></div>`);
 
     $("#container").append($fullContainer);
   }
